@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+	<meta charset='UTF-8'/>
+	<head>
+		<title>Computação Gráfica I - Retas</title>
+	</head>
+	<script>
+		var objCanvas;
+		var ctx;
+
+		function init(){
+			objCanvas = document.getElementById('canvas');
+			ctx = objCanvas.getContext('2d');
+		}
+
+		function draw(frm){
+			var vet = [{x: frm.ipt_x.value, y: frm.ipt_y.value}, {x: frm.ipt_x2.value, y: frm.ipt_y2.value}];
+			var type = frm.ipt_type;
+			
+			// Reta na Vertical
+			if (vet[0].x == vet[1].x){
+				//console.log("Desenha a linha dos pontos "+vet[0].x+":"+vet[0].y+" to "+vet[1].x+":"+vet[1].y);
+				if(vet[1].y >= vet[0].y){
+					var i =0;
+					var cont = vet[0].y
+					for(i=vet[0].y; i <= vet[1].y; i++){
+						ctx.moveTo(vet[0].x, vet[0].y);
+						ctx.lineTo(vet[1].x, i);	
+						ctx.stroke();
+						cont++;
+					}	
+				}
+				if(vet[0].y >= vet[1].y){
+					var i =0;
+					var cont = vet[0].y
+					for(i=vet[1].y; i <= vet[0].y; i++){
+						ctx.moveTo(vet[0].x, vet[0].y);
+						ctx.lineTo(vet[1].x, i);	
+						ctx.stroke();
+						cont++;
+					}
+				}
+				return false;
+			}
+		
+			else{
+				
+				// Reta na Horizontal
+				if (vet[0].x > vet[1].x){
+					a = vet[0].x, 		// a=x1
+					c = vet[0].y; 		//c=y1
+					vet[0].x = vet[1].x; 	//x1=x2
+					vet[1].x = a; 			// x2=a
+				
+					vet[0].y = vet[1].y;  //y1=y2
+					vet[1].y = c;   			//y2=c
+					m = parseInt((vet[1].y-vet[0].y)/(vet[1].x-vet[0].x)); 	//m = (y2-y1)/(x2-x1)
+					b = vet[1].y-(m*vet[1].x);										//b = y2-(m*x2)						
+					for (inc = vet[0].x; inc < vet[1].x; inc++){						//for x in range(x1,x2+1)												
+							ctx.moveTo(vet[0].x,vet[0].y);
+							ctx.lineTo(vet[1].x,yfinal = parseInt((m*inc)+b)); //y=int((m*x)+b)
+							ctx.stroke();		
+					}
+				
+					return false;
+				}else{											// Caso não atenda a nehuma das condições anteriores 
+					ctx.moveTo(vet[0].x,vet[0].y);
+					ctx.lineTo(vet[1].x,vet[1].y);
+					ctx.stroke();
+					return false;
+				}
+			} 	
+		}
+	</script>
+	<style>
+		#canvas{
+			background-color: #DCDCDC;
+			border: 1px solid #000000;
+			padding: 0px;
+			margin-left: 0px;
+		}
+
+		table{
+			width: 400px;
+			border: 1px solid #000;
+			border-bottom: 0px;
+			margin-left: 200px;
+		}
+		table input[type='number']{
+			width: 50px;
+		}
+	</style>
+	<body onload='init();'>
+		<form action='#' method="POST" onsubmit="return draw(this);">
+			<table>
+				<tr>
+					<td rowspan='3'>
+						<input type='submit' value='Desenhar' style='height: 100%; width: 75px;'/>
+					</td>
+				</tr>
+				<tr>
+					<td align='center'><label for='ipt_x'>X:</label></td>
+					<td align='center'><input type='number' name='ipt_x' id='ipt_x'/></td>
+					<td align='center'>&nbsp;-&nbsp;</td>
+					<td align='center'><label for='ipt_y'>Y:</label></td>
+					<td align='center'><input type='number' name='ipt_y' id='ipt_y'/></td>
+				</tr>
+				<tr>
+					<td align='center'><label for='ipt_x2'>X:</label></td>
+					<td align='center'><input type='number' name='ipt_x2' id='ipt_x2'/></td>
+					<td align='center'>&nbsp;-&nbsp;</td>
+					<td align='center'><label for='ipt_y2'>Y:</label></td>
+					<td align='center'><input type='number' name='ipt_y2' id='ipt_y2'/></td>
+				</tr>
+			</table>
+		</form>
+		<canvas id='canvas' width='800' height='600'>
+		</canvas>
+	</body>
+</html>
